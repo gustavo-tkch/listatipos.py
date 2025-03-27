@@ -1,5 +1,6 @@
+#lista para tipos selecionar tipos de apartamentos, informando o valor total a pagar
+#como havia pedido o professor oscar na aula de terça feira
 
-from colorama import Fore, Style, init
 
 from colorama import Fore, Style, init
 
