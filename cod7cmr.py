@@ -58,8 +58,9 @@ while True:
             print("Por favor, insira valores positivos para pessoas e dias.")
         novo_cadastro = input("deseja continuar ou fazer uma nova reserva (Digite sim ou não): ").strip().lower()
 
-        if novo_cadastro == 'Não' or "não":
+        if novo_cadastro == 'não':
             print("Reserva efetuada com sucesso")
             break
+
     except ValueError:
         print("Por favor, insira números válidos para pessoas e dias.")
