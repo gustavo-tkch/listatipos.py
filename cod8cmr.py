@@ -1,8 +1,8 @@
 
 #
-#
-# implementar o pip install colorama
-#
+# "ainda tem muito no que fazer"
+# implemente o: pip install colorama
+# "reserva de hotel"
 #
 
 from colorama import Fore, Style, init
@@ -27,7 +27,15 @@ def exibir_lista(lista):
     for i, valor in enumerate(lista, start=1):
         print(f"{Fore.GREEN}{i} - R${valor:.2f}{Style.RESET_ALL}")
 
-reservas = []  # lista para armazenar as reservas com nome, valor, data de início e data de término
+# função para verificar conflito de reservas
+def verificar_conflito(tipo, data):
+    for reserva in reservas:
+        _, _, inicio, termino, tipo_reserva = reserva
+        if tipo == tipo_reserva and inicio <= data <= termino:
+            return termino  # Retorna a data de término da reserva conflituosa
+    return None
+
+reservas = []  # lista para armazenar as reservas com nome, valor, data de início, data de término e tipo de quarto
 nome_usuario = input("Por favor, informe seu nome: ").strip()
 
 while True:  # loop para repetir caso o usuário deseje fazer nova reserva
@@ -65,12 +73,30 @@ while True:  # loop para repetir caso o usuário deseje fazer nova reserva
     try:
         data_reserva = input("\nInforme a data da reserva (dd/mm/aaaa): ").strip()
         data_inicio = datetime.strptime(data_reserva, "%d/%m/%Y")  # converte a data para o formato correto
+
+        # verifica se já existe conflito de reserva para o mesmo tipo de quarto
+        conflito = verificar_conflito(valor_selecionado, data_inicio)
+        if conflito:
+            print(f"{Fore.RED}Não é possível realizar a reserva. Já existe uma reserva para este tipo de quarto na data especificada.{Style.RESET_ALL}")
+            
+            # oferece alternativas ao usuário
+            escolha = input(f"Deseja {Fore.YELLOW}escolher outro quarto (1){Style.RESET_ALL} ou {Fore.YELLOW}reservar 3 dias após o fim da reserva (2)?{Style.RESET_ALL} ").strip()
+            if escolha == "1":
+                print("Por favor, escolha outro quarto.")
+                continue
+            elif escolha == "2":
+                data_inicio = conflito + timedelta(days=3)
+                print(f"Ok! Nova data de reserva ajustada para: {Fore.GREEN}{data_inicio.strftime('%d/%m/%Y')}{Style.RESET_ALL}")
+            else:
+                print("Opção inválida. Retornando ao início.")
+                continue
+
         qtd_pessoas = int(input("\nInforme a quantidade de pessoas: "))
         qtd_dias = int(input("Informe a quantidade de dias que ficará hospedado: "))
         if qtd_pessoas > 0 and qtd_dias > 0:
             data_termino = data_inicio + timedelta(days=qtd_dias)  # calcula a data de término
             total = valor_selecionado * qtd_pessoas * qtd_dias
-            reservas.append((nome_usuario, total, data_inicio, data_termino))  # adiciona nome, total e datas à lista
+            reservas.append((nome_usuario, total, data_inicio, data_termino, valor_selecionado))  # adiciona a reserva à lista
             print(f"\nO total desta reserva é: {Fore.GREEN}R${total:.2f}{Style.RESET_ALL}")
             print(f"A hospedagem começa em: {Fore.RED}{data_inicio.strftime('%d/%m/%Y')}{Style.RESET_ALL} "
                   f"e termina em: {Fore.RED}{data_termino.strftime('%d/%m/%Y')}{Style.RESET_ALL}")
@@ -84,19 +110,20 @@ while True:  # loop para repetir caso o usuário deseje fazer nova reserva
     resposta = input("\nDeseja fazer uma nova reserva? (sim/não): ").strip().lower()
     if resposta == "não":
         print("\nResumo das Reservas:")
-        for i, (usuario, valor, inicio, termino) in enumerate(reservas, start=1):
+        for i, (usuario, valor, inicio, termino, tipo_reserva) in enumerate(reservas, start=1):
             print(f"Reserva {i} - Usuário: {Fore.CYAN}{usuario}{Style.RESET_ALL}, "
+                  f"Quarto: {Fore.YELLOW}Tipo {tipo_reserva}{Style.RESET_ALL}, "
                   f"Valor: {Fore.GREEN}R${valor:.2f}{Style.RESET_ALL}, "
                   f"Período: {Fore.RED}{inicio.strftime('%d/%m/%Y')}{Style.RESET_ALL} a {Fore.RED}{termino.strftime('%d/%m/%Y')}{Style.RESET_ALL}")
-        total_geral = sum(valor for _, valor, _, _ in reservas)
+        total_geral = sum(valor for _, valor, _, _, _ in reservas)
         print(f"\nO total geral a pagar é: {Fore.GREEN}R${total_geral:.2f}{Style.RESET_ALL}")
         
         # opção de parcelamento
         parcelar = input("\nDeseja parcelar o valor? (sim/não): ").strip().lower()
         if parcelar == "sim":
-            print("\nVocê pode parcelar em até 6 vezes.")
-            parcelas = int(input("Escolha o número de parcelas (2 a 6 vezes): "))
-            if 1 <= parcelas <= 6:
+            print("\nVocê pode parcelar em até 12 vezes.")
+            parcelas = int(input("Escolha o número de parcelas (2 a 12 vezes): "))
+            if 1 <= parcelas <= 12:
                 valor_parcela = total_geral / parcelas
                 print(f"\nO valor será parcelado em {parcelas}x de {Fore.GREEN}R${valor_parcela:.2f}{Style.RESET_ALL}")
             else:
@@ -105,12 +132,20 @@ while True:  # loop para repetir caso o usuário deseje fazer nova reserva
         print("\nReservas foram feitas com sucesso!")
         break
     elif resposta == "sim":
-        mesma_pessoa = input("É a mesma pessoa? (sim/não): ").strip().lower()
+        mesma_pessoa = input("\nÉ a mesma pessoa? (sim/não): ").strip().lower()
         if mesma_pessoa == "não":
-            nome_usuario = input("Por favor, informe o nome do novo usuário: ").strip()
-        else:
-            outra_data = input("Esta reserva será para outra data? (sim/não): ").strip().lower()
+            nome_usuario = input("\nPor favor, informe o nome do novo usuário: ").strip()
+        elif mesma_pessoa == "sim":
+            outra_data = input("\nEsta reserva será para outra data? (sim/não): ").strip().lower()
             if outra_data == "sim":
-                print("Ok! Vamos prosseguir com a nova reserva para a data específica.")
-    else:
-        print("Resposta inválida. Por favor, responda com 'sim' ou 'não'.")
+                data_reserva = input("\nInforme a nova data da reserva (dd/mm/aaaa): ").strip()
+                data_inicio = datetime.strptime(data_reserva, "%d/%m/%Y")  # converte a data para o formato correto
+            elif outra_data == "não":
+                print(f"Reserva será feita para a mesma data da última reserva: {reservas[-1][2].strftime('%d/%m/%Y')}")
+                data_inicio = reservas[-1][2]
+            else:
+                print("\nOpção inválida. Retornando ao início.")
+                continue
+        else:
+            print("\nOpção inválida. Retornando ao início.")
+            continue
