@@ -109,9 +109,8 @@ while True:  # loop para repetir caso o usuário deseje fazer nova reserva
         if mesma_pessoa == "não":
             nome_usuario = input("Por favor, informe o nome do novo usuário: ").strip()
         else:
-            outra_data = input("Esta reserva será para outra data específica? (sim/não): ").strip().lower()
+            outra_data = input("Esta reserva será para outra data? (sim/não): ").strip().lower()
             if outra_data == "sim":
                 print("Ok! Vamos prosseguir com a nova reserva para a data específica.")
     else:
         print("Resposta inválida. Por favor, responda com 'sim' ou 'não'.")
-        
