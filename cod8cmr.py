@@ -20,7 +20,7 @@ print(f'''{Fore.BLUE}
 {Style.RESET_ALL}''')
 
 tipos_lista1 = [20.00, 28.00, 35.00, 42.00, 48.00, 53.00]  # Tipos 1 ao 6
-tipos_lista2 = [28.00, 35.00, 42.00, 50.00, 57.00, 63.00]  # Tipos 7 ao 12
+tipos_lista2 = [28.00, 35.00, 42.00, 50.00, 57.00, 63.00]  # Tipos 1 ao 6
 
 # função para exibir os valores de uma lista
 def exibir_lista(lista):
