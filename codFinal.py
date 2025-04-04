@@ -28,21 +28,45 @@ while True:
 
     # a lista
     user = input("Digite seu nome: ")
+    cpf = input("Digite o seu CPF: ") 
     print("Selecione qual tipo de apartamento deseja: ")
-    print("1 - Apartamento 1 ao 6")
-    print("2 - Apartamento 1 ao 6")
+    print("Apartamento - Tipo 1")
+    print("Apartamento - Tipo 2")
     escolha_lista = input("Digite o número da lista que deseja visualizar (1 ou 2): ")
 
     if escolha_lista == "1":
         print("\nVocê selecionou a Lista 1 (Escolha um dos apartamentos 1 a 6): ")
-        exibir_lista(tipos_lista1)
+        print("""
+        __________________________________
+        |quant de pessoas     Valor      |
+        |    1    |          R$20,00     |
+        |    2    |          R$28,00     |
+        |    3    |          R$35,00     |
+        |    4    |          R$42,00     |
+        |    5    |          R$48,00     |
+        |    6    |          R$53,00     |
+        |________________________________|
+        """)
+       
         escolha = int(input("\nEscolha um apartamento do tipo 1 a 6: ")) - 1
         if 0 <= escolha < len(tipos_lista1):
             valor_selecionado = tipos_lista1[escolha]
 
     elif escolha_lista == "2":
         print("\nVocê selecionou a Lista 2 (Escolha um dos apartamentos 1 a 6): ")
-        exibir_lista(tipos_lista2)
+        print("""
+        ___________________________________
+        | quant de pessoas     Valor      |
+        |     1    |          R$25,00     |
+        |     2    |          R$34,00     |
+        |     3    |          R$42,00     |
+        |     4    |          R$50,00     |
+        |     5    |          R$57,00     |
+        |     6    |          R$63,00     |
+        |_________________________________|
+
+
+""")
         escolha = int(input("\nEscolha um apartamento do tipo 1 a 6: ")) - 1
         if 0 <= escolha < len(tipos_lista2):
             valor_selecionado = tipos_lista2[escolha]
@@ -66,6 +90,7 @@ while True:
         # criando a tabela com o resumo da reserva
         tabela = [
             ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
+            ["CPF", f"{Fore.CYAN}{cpf}{Style.RESET_ALL}"],
             ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
             ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
             ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
@@ -92,6 +117,7 @@ while True:
                 # para atualizar a tabela com o parcelamento
                 tabela_parcelada = [
                     ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
+                    ["CPF", f"{Fore.CYAN}{cpf}{Style.RESET_ALL}"],
                     ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
                     ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
                     ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
@@ -106,15 +132,7 @@ while True:
 
         elif parcelar == "não":
             os.system("cls")  # Limpa a tela
-
-            # aqui é para criar a tabela com o resumo da reserva
-            tabela = [
-                ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
-                ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
-                ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
-                ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
-                ["Total a Pagar", f"{Fore.GREEN}R${total:.2f}{Style.RESET_ALL}"]
-            ]
+        
 
             print("\nResumo da Reserva:")
             print(tabulate(tabela, headers=["Descrição", "Valor"], tablefmt="fancy_grid"))
@@ -123,9 +141,25 @@ while True:
 
         else:
             print("Resposta inválida! Por favor, digite 'sim' ou 'não'.")
-
+        
+        resposta = input("\nDigite (sim) para fazer uma nova reserva: ").strip().lower()
+        if resposta == "não":
+            # aqui é para criar a tabela com o resumo da reserva
+            tabela = [
+                ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
+                ["CPF", f"{Fore.CYAN}{cpf}{Style.RESET_ALL}"],
+                ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
+                ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
+                ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
+                ["Total a Pagar", f"{Fore.GREEN}R${total:.2f}{Style.RESET_ALL}"]
+            ]
+        if resposta == "sim":
+            continue
         input("Aperte enter para finalizar!")
         break  # finaliza o loop após o processo
+        
+        
 
     except ValueError:
         print("Por favor, insira números válidos para pessoas e dias.")
+        
