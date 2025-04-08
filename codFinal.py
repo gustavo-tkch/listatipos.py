@@ -7,6 +7,18 @@ from tabulate import tabulate  # importando a biblioteca para criar a tabela
 
 init()
 
+# Função para formatar CPF
+def formatar_cpf(cpf):
+    # Remove qualquer caractere não numérico
+    cpf = ''.join(filter(str.isdigit, cpf))
+    
+    # Formata o CPF
+    if len(cpf) == 11:
+        cpf_formatado = f'{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}'
+        return cpf_formatado
+    else:
+        return "CPF inválido"
+
 while True:
     os.system("cls")
     print(f'''{Fore.BLUE}
@@ -28,7 +40,9 @@ while True:
 
     # a lista
     user = input("Digite seu nome: ")
-    cpf = input("Digite o seu CPF: ") 
+    cpf = input("Digite o seu CPF (apenas números): ") 
+    cpf_formatado = formatar_cpf(cpf)  # Formata o CPF
+
     print("Selecione qual tipo de apartamento deseja: ")
     print("Apartamento - Tipo 1")
     print("Apartamento - Tipo 2")
@@ -64,9 +78,7 @@ while True:
         |     5    |          R$57,00     |
         |     6    |          R$63,00     |
         |_________________________________|
-
-
-""")
+        """)
         escolha = int(input("\nEscolha um apartamento do tipo 1 a 6: ")) - 1
         if 0 <= escolha < len(tipos_lista2):
             valor_selecionado = tipos_lista2[escolha]
@@ -76,7 +88,7 @@ while True:
 
     # solicitar quantidade de pessoas e dias
     try:
-        qtd_pessoas = int(input("\nInforme a quantidade de pessoas: "))
+        qtd_pessoas = escolha
         qtd_dias = int(input("Informe a quantidade de dias que ficará hospedado: "))
         if qtd_pessoas > 0 and qtd_dias > 0:
             total = valor_selecionado * qtd_pessoas * qtd_dias
@@ -89,12 +101,12 @@ while True:
 
         # criando a tabela com o resumo da reserva
         tabela = [
-            ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
-            ["CPF", f"{Fore.CYAN}{cpf}{Style.RESET_ALL}"],
-            ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
-            ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
-            ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
-            ["Total a Pagar", f"{Fore.GREEN}R${total:.2f}{Style.RESET_ALL}"]
+                   ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
+                   ["CPF", f"{Fore.CYAN}{cpf_formatado}{Style.RESET_ALL}"],  # Exibindo CPF formatado
+                   ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
+                   ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
+                   ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
+                   ["Total a Pagar", f"{Fore.GREEN}R${total:.2f}{Style.RESET_ALL}"]
         ]
 
         print("\nResumo da Reserva:")
@@ -117,7 +129,7 @@ while True:
                 # para atualizar a tabela com o parcelamento
                 tabela_parcelada = [
                     ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
-                    ["CPF", f"{Fore.CYAN}{cpf}{Style.RESET_ALL}"],
+                    ["CPF", f"{Fore.CYAN}{cpf_formatado}{Style.RESET_ALL}"],  # Exibindo CPF formatado
                     ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
                     ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
                     ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
@@ -140,18 +152,18 @@ while True:
             print(f"\n{Fore.CYAN}Reserva feita com sucesso, obrigado pela preferência!{Style.RESET_ALL}")
 
         else:
-            print("Resposta inválida! Por favor, digite 'sim' ou 'não'.")
+            print("Resposta está inválida! Por favor, digite apenas 'sim' ou 'não'.")
         
         resposta = input("\nDigite (sim) para fazer uma nova reserva: ").strip().lower()
         if resposta == "não":
             # aqui é para criar a tabela com o resumo da reserva
             tabela = [
-                ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
-                ["CPF", f"{Fore.CYAN}{cpf}{Style.RESET_ALL}"],
-                ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
-                ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
-                ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
-                ["Total a Pagar", f"{Fore.GREEN}R${total:.2f}{Style.RESET_ALL}"]
+                    ["Nome", f"{Fore.CYAN}{user}{Style.RESET_ALL}"],
+                    ["CPF", f"{Fore.CYAN}{cpf_formatado}{Style.RESET_ALL}"],  # Exibindo CPF formatado
+                    ["Quantidade de Pessoas", f"{Fore.YELLOW}{qtd_pessoas}{Style.RESET_ALL}"],
+                    ["Quantidade de Dias", f"{Fore.YELLOW}{qtd_dias}{Style.RESET_ALL}"],
+                    ["Valor do Apartamento", f"{Fore.GREEN}R${valor_selecionado:.2f}{Style.RESET_ALL}"],
+                    ["Total a Pagar", f"{Fore.GREEN}R${total:.2f}{Style.RESET_ALL}"]
             ]
         if resposta == "sim":
             continue
@@ -161,5 +173,4 @@ while True:
         
 
     except ValueError:
-        print("Por favor, insira números válidos para pessoas e dias.")
-        
+        print("Por favor, insira números válidos para pessoas e dias")
